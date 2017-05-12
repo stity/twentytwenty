@@ -5,68 +5,108 @@
 <!--[if IE 8 ]>    <html class="lt-ie9" lang="en"> <![endif]-->
 <!--[if IE 9 ]>    <html class="lt-ie10" lang="en"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>twentytwenty</title>
-  <link href="css/foundation.css" rel="stylesheet" type="text/css" />
-  <link href="css/twentytwenty.css" rel="stylesheet" type="text/css" />
-</head>
-  <body>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>twentytwenty</title>
+        <link href="css/foundation.css" rel="stylesheet" type="text/css" />
+        <link href="css/twentytwenty.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
 
-    <div class="row" style="margin-top: 2em;">
-      <div class="large-4 columns">
-        <h3>Basic Usage</h3>
-        <p>Demonstrates basic usage of the plugin.</p>
-      </div>
-      <div class="large-8 columns">
-        <div class="twentytwenty-container">
-          <img src="img/1_1.jpg" />
-          <img src="img/1_2.jpg" />
+        <div class="row" style="margin-top: 2em;">
+            <div class="large-4 columns">
+                <h3>Basic Usage</h3>
+                <p>Demonstrates basic usage of the plugin.</p>
+            </div>
+            <div class="large-8 columns">
+                <div class="twentytwenty-container">
+                    <canvas id="canvas1" class="imgLeft" style="position:absolute;background:blue;"></canvas>
+                    <canvas id="canvas2" class="imgRight"></canvas>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    
-    <div class="row" style="margin-top: 2em; margin-bottom: 2em;">
-      <div class="large-4 columns">
-        <h3>Vertical Orientation</h3>
-        <p>Demonstrates sliding up and down.</p>
-      </div>
-      <div class="large-8 columns">
-        <div class="twentytwenty-container" data-orientation="vertical">
-          <img src="img/1_1.jpg" />
-          <img src="img/1_2.jpg" />
-        </div>
-      </div>
-    </div>
 
-    <div class="row" style="margin-bottom: 2em;">
-      <div class="large-4 columns">
-        <h3>Side by side</h3>
-        <p>Using multiple comparisons at once.</p>
-      </div>
-      <div class="large-4 columns">
-        <div class="twentytwenty-container">
-          <img src="img/2_1.jpg" />
-          <img src="img/2_2.jpg" />
+        <div class="row" style="margin-top: 2em; margin-bottom: 2em;">
+            <div class="large-4 columns">
+                <h3>Vertical Orientation</h3>
+                <p>Demonstrates sliding up and down.</p>
+            </div>
+            <div class="large-8 columns">
+                <div class="twentytwenty-container" data-orientation="vertical">
+                    <canvas id="canvas3" class="imgLeft" style="position:absolute;background:blue;"></canvas>
+                    <canvas id="canvas4" class="imgRight"></canvas>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="large-4 columns">
-        <div class="twentytwenty-container">
-          <img src="img/3_1.jpg" />
-          <img src="img/3_2.jpg" />
-        </div>
-      </div>
-    </div>
-    
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-    <script src="js/jquery.event.move.js"></script>
-    <script src="js/jquery.twentytwenty.js"></script>
-    <script>
-    $(window).load(function(){
-      $(".twentytwenty-container[data-orientation!='vertical']").twentytwenty({default_offset_pct: 0.7});
-      $(".twentytwenty-container[data-orientation='vertical']").twentytwenty({default_offset_pct: 0.3, orientation: 'vertical'});
-    });
-    </script>
-  </body>
+
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+        <script src="js/jquery.event.move.js"></script>
+        <script src="js/jquery.twentytwenty.js"></script>
+        <script>
+            $(window).load(function(){
+                $(".twentytwenty-container[data-orientation!='vertical']").twentytwenty({default_offset_pct: 0.7});
+                $(".twentytwenty-container[data-orientation='vertical']").twentytwenty({default_offset_pct: 0.3, orientation: 'vertical'});
+            });
+            function canvasAnimation(canvas, _c){
+
+                var dots = [];
+                var dIndex = 0;
+                var ctx = canvas.getContext("2d");
+                var total = 2;
+                var max = 100;
+                var c =  _c;
+                canvas.height = 300;
+                canvas.width = 800;
+
+                var Dot = function(){
+                    this.x = this.random(0, canvas.width);
+                    this.y = this.random(0, canvas.height);
+                    this.size = this.random(5, 10);
+                    this.color = "hsl("+ c +", 50%, 50%)";
+                    if(c >= 360){
+                        c = 0;
+                    }
+                    c += .05;
+                    this.life = 0;
+                    dots[dIndex] = this;
+                    this.id = dIndex;
+                    dIndex++;
+                };
+
+                Dot.prototype.random = function(min, max){
+                    return Math.random() * (max - min) + min;
+                }
+
+                Dot.prototype.draw = function(){
+                    this.x += this.random(-3, 3);
+                    this.y += this.random(-3, 3);
+                    ctx.fillStyle = this.color;
+                    ctx.fillRect(this.x, this.y, this.size, this.size);
+                    this.life++;
+                    if(this.life >= max){
+                        delete dots[this.id];
+                    }
+                };
+
+                function frames(){
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    for(var i=0; i<total; i++){
+                        new Dot();
+                    }
+                    for(var i in dots){
+                        dots[i].draw();
+                    }
+                    window.requestAnimationFrame(frames);
+                };
+
+                frames();
+            };
+            canvasAnimation(document.getElementById('canvas1'),0);
+            canvasAnimation(document.getElementById('canvas2'), 100);
+            canvasAnimation(document.getElementById('canvas3'),0);
+            canvasAnimation(document.getElementById('canvas4'), 100);
+        </script>
+    </body>
 </html>

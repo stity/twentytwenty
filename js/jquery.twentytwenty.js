@@ -12,9 +12,9 @@
       
       
       container.wrap("<div class='twentytwenty-wrapper twentytwenty-" + sliderOrientation + "'></div>");
-      container.append("<div class='twentytwenty-overlay'></div>");
-      var beforeImg = container.find("img:first");
-      var afterImg = container.find("img:last");
+      //container.append("<div class='twentytwenty-overlay'></div>");
+      var beforeImg = container.find(".imgLeft");
+      var afterImg = container.find(".imgRight");
       container.append("<div class='twentytwenty-handle'></div>");
       var slider = container.find(".twentytwenty-handle");
       slider.append("<span class='twentytwenty-" + beforeDirection + "-arrow'></span>");
@@ -23,9 +23,9 @@
       beforeImg.addClass("twentytwenty-before");
       afterImg.addClass("twentytwenty-after");
       
-      var overlay = container.find(".twentytwenty-overlay");
-      overlay.append("<div class='twentytwenty-before-label'></div>");
-      overlay.append("<div class='twentytwenty-after-label'></div>");
+      //var overlay = container.find(".twentytwenty-overlay");
+      //overlay.append("<div class='twentytwenty-before-label'></div>");
+      //overlay.append("<div class='twentytwenty-after-label'></div>");
 
       var calcOffset = function(dimensionPct) {
         var w = beforeImg.width();
@@ -40,10 +40,12 @@
 
       var adjustContainer = function(offset) {
       	if (sliderOrientation === 'vertical') {
-      	  beforeImg.css("clip", "rect(0,"+offset.w+","+offset.ch+",0)");
+          beforeImg.css("clip-path", "polygon(0px 0px, 0px "+offset.ch+","+offset.w+" "+offset.ch+","+offset.w+" 0px)");
+          beforeImg.css("clip-path", "-webkit-polygon(0px 0px, 0px "+offset.ch+","+offset.w+" "+offset.ch+","+offset.w+" 0px)");
       	}
       	else {
-          beforeImg.css("clip", "rect(0,"+offset.cw+","+offset.h+",0)");
+          beforeImg.css("clip-path", "polygon(0px 0px, 0px "+offset.h+","+offset.cw+" "+offset.h+","+offset.cw+" 0px)");
+          beforeImg.css("clip-path", "-webkit-polygon(0px 0px, 0px "+offset.h+","+offset.cw+" "+offset.h+","+offset.cw+" 0px)");
     	}
         container.css("height", offset.h);
       };
