@@ -1,10 +1,12 @@
 ## Note
 This is the fork of the original library. Main difference is the ability to support canvas instead of images only.
 ### New Usage :
+```html
 <div id="container1">
  <canvas class="imgLeft"></canvas>
  <canvas class="imgRight"></canvas>
 </div>
+```
 
 ## Basic usage
 
